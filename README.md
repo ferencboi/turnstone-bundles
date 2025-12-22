@@ -1,6 +1,6 @@
 # Turnstone Bundles
 
-Private repository for Turnstone runtime bundles distribution.
+Repository for Turnstone runtime bundles distribution.
 
 ## Overview
 
@@ -56,9 +56,3 @@ The Turnstone app fetches:
 1. `bundle-index.json` from the latest release
 2. Selected bundle archives from their respective releases
 3. Verifies SHA-256 hash before extraction
-
-## Private Repository
-
-This repository is private. Access is restricted to authorized developers.
-Do not share bundle URLs or hashes publicly.
-
