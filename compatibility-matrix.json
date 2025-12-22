@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2025-06-22T00:00:00Z",
+  "compatibilitySets": [
+    {
+      "id": "stable-adreno-2025-06",
+      "label": "stable",
+      "displayName": "Stable - June 2025 (Adreno)",
+      "deviceHints": ["adreno-600", "adreno-700"],
+      "bundles": {
+        "wine": "9.0",
+        "box64": "0.2.8",
+        "dxvk": "2.4",
+        "turnip": "24.1"
+      },
+      "notes": "Recommended stable configuration for Adreno 6xx/7xx GPUs"
+    },
+    {
+      "id": "minimal-2025-06",
+      "label": "minimal",
+      "displayName": "Minimal - June 2025",
+      "deviceHints": [],
+      "bundles": {
+        "wine": "9.0",
+        "box64": "0.2.8",
+        "dxvk": "2.4",
+        "turnip": "24.1"
+      },
+      "notes": "Basic configuration for testing on any device"
+    }
+  ]
+}
+

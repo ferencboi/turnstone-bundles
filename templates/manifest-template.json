@@ -1,0 +1,14 @@
+{
+  "id": "{component}-{version}-arm64",
+  "type": "{component}",
+  "version": "{version}",
+  "abi": "arm64-v8a",
+  "sha256": "{sha256}",
+  "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/{component}-{version}/{component}-{version}-arm64.tar.zst",
+  "sizeBytes": 0,
+  "compatibilityTags": [],
+  "requiredVulkanExtensions": [],
+  "minAndroidSdk": 29,
+  "releaseNotes": ""
+}
+
