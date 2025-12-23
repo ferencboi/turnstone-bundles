@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2025-06-22T00:00:00Z",
+  "updatedAt": "2025-12-23T13:00:00Z",
   "compatibilitySets": [
     {
-      "id": "stable-adreno-2025-06",
+      "id": "stable-adreno-2025-12",
       "label": "stable",
-      "displayName": "Stable - June 2025 (Adreno)",
+      "displayName": "Stable - December 2025 (Adreno)",
       "deviceHints": ["adreno-600", "adreno-700"],
       "bundles": {
         "wine": "9.0",
-        "box64": "0.2.8",
+        "box64": "0.3.8",
         "dxvk": "2.4",
         "turnip": "24.1"
       },
       "notes": "Recommended stable configuration for Adreno 6xx/7xx GPUs"
     },
     {
-      "id": "minimal-2025-06",
+      "id": "minimal-2025-12",
       "label": "minimal",
-      "displayName": "Minimal - June 2025",
+      "displayName": "Minimal - December 2025",
       "deviceHints": [],
       "bundles": {
         "wine": "9.0",
-        "box64": "0.2.8",
+        "box64": "0.3.8",
         "dxvk": "2.4",
         "turnip": "24.1"
       },

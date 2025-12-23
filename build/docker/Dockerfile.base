@@ -1,0 +1,75 @@
+# Base Docker image for building Turnstone bundles
+# Contains Android NDK and common build tools
+#
+# Build: docker build -t turnstone-build-base -f Dockerfile.base .
+
+FROM ubuntu:22.04
+
+LABEL maintainer="Turnstone Project"
+LABEL description="Base build environment for Turnstone Android bundles"
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Android NDK version
+ENV NDK_VERSION=r27c
+ENV ANDROID_NDK_HOME=/opt/android-ndk
+ENV ANDROID_API=29
+
+# Add NDK to PATH
+ENV PATH="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin:${PATH}"
+
+# Install base build dependencies
+RUN apt-get update && apt-get install -y \
+    # Basic build tools
+    build-essential \
+    cmake \
+    ninja-build \
+    meson \
+    pkg-config \
+    autoconf \
+    automake \
+    libtool \
+    # Compression
+    zstd \
+    tar \
+    xz-utils \
+    # Download tools
+    curl \
+    wget \
+    git \
+    # Python (for meson, scripts)
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    python3-mako \
+    python3-ply \
+    # LLVM/Clang for cross-compilation
+    llvm \
+    clang \
+    lld \
+    # Misc
+    unzip \
+    file \
+    patchelf \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install meson via pip for latest version
+RUN pip3 install --no-cache-dir meson
+
+# Download and extract Android NDK
+RUN mkdir -p /opt && \
+    cd /opt && \
+    curl -L -o ndk.zip "https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip" && \
+    unzip -q ndk.zip && \
+    mv android-ndk-${NDK_VERSION} android-ndk && \
+    rm ndk.zip
+
+# Create output directory
+RUN mkdir -p /output /build
+
+WORKDIR /build
+
+# Default command
+CMD ["/bin/bash"]
+

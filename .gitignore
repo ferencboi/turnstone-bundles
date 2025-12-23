@@ -3,8 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Build outputs
-build/
+# Build outputs (but not build scripts)
+build/output/
 dist/
 *.tar.zst
 *.tar.gz
