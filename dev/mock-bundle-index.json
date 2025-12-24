@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2025-06-22T00:00:00Z",
+  "updatedAt": "2025-12-24T18:47:22Z",
   "bundles": [
     {
       "id": "wine-9.0-arm64",
@@ -29,82 +29,46 @@
       "releaseNotes": "Wine 9.5 stable release for arm64 - improved DirectX support"
     },
     {
-      "id": "box64-0.2.6-arm64",
+      "id": "box64-0.3.8-arm64",
       "type": "box64",
-      "version": "0.2.6",
+      "version": "0.3.8",
       "abi": "arm64-v8a",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "downloadUrl": "https://example.com/mock/box64-0.2.6-arm64.tar.zst",
-      "sizeBytes": 8388608,
+      "sha256": "550bfe8c5afacdd14bbf27c9abd212044a887ba83e434ecbae67b383cad01ed2",
+      "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/box64-0.3.8/box64-0.3.8-arm64.tar.zst",
+      "sizeBytes": 3466940,
       "compatibilityTags": [],
       "requiredVulkanExtensions": [],
       "minAndroidSdk": 29,
-      "releaseNotes": "box64 0.2.6 for x86_64 emulation"
+      "releaseNotes": "box64 0.3.8 - x86_64 Linux emulator for ARM64 Android. First production release."
     },
     {
-      "id": "box64-0.2.8-arm64",
-      "type": "box64",
-      "version": "0.2.8",
-      "abi": "arm64-v8a",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "downloadUrl": "https://example.com/mock/box64-0.2.8-arm64.tar.zst",
-      "sizeBytes": 8650752,
-      "compatibilityTags": [],
-      "requiredVulkanExtensions": [],
-      "minAndroidSdk": 29,
-      "releaseNotes": "box64 0.2.8 - performance improvements"
-    },
-    {
-      "id": "dxvk-2.3-arm64",
+      "id": "dxvk-2.5.3-arm64",
       "type": "dxvk",
-      "version": "2.3",
+      "version": "2.5.3",
       "abi": "arm64-v8a",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "downloadUrl": "https://example.com/mock/dxvk-2.3-arm64.tar.zst",
-      "sizeBytes": 15728640,
+      "sha256": "48a93ca9e52a2da82e13bd2fc6f1de4dbb53bb52febe4aa77727a55f1355a023",
+      "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/dxvk-2.5.3/dxvk-2.5.3-arm64.tar.zst",
+      "sizeBytes": 4186091,
       "compatibilityTags": [],
-      "requiredVulkanExtensions": ["VK_KHR_maintenance1"],
+      "requiredVulkanExtensions": [
+        "VK_KHR_maintenance1",
+        "VK_KHR_dedicated_allocation"
+      ],
       "minAndroidSdk": 29,
-      "releaseNotes": "DXVK 2.3 DirectX to Vulkan translation"
+      "releaseNotes": "DXVK 2.5.3 - DirectX 9/10/11 to Vulkan translation layer. First production release."
     },
     {
-      "id": "dxvk-2.4-arm64",
-      "type": "dxvk",
-      "version": "2.4",
-      "abi": "arm64-v8a",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "downloadUrl": "https://example.com/mock/dxvk-2.4-arm64.tar.zst",
-      "sizeBytes": 16252928,
-      "compatibilityTags": [],
-      "requiredVulkanExtensions": ["VK_KHR_maintenance1", "VK_KHR_dedicated_allocation"],
-      "minAndroidSdk": 29,
-      "releaseNotes": "DXVK 2.4 - improved DX11 compatibility"
-    },
-    {
-      "id": "turnip-24.0-arm64",
+      "id": "turnip-25.3.2-arm64",
       "type": "turnip",
-      "version": "24.0",
+      "version": "25.3.2",
       "abi": "arm64-v8a",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "downloadUrl": "https://example.com/mock/turnip-24.0-arm64.tar.zst",
-      "sizeBytes": 31457280,
+      "sha256": "fb8bed77facb1a7215fa2fe3483915874fb5552f742ea0ef3852a36b1388c009",
+      "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/turnip-25.3.2/turnip-25.3.2-arm64.tar.zst",
+      "sizeBytes": 1715942,
       "compatibilityTags": ["adreno-600", "adreno-700"],
       "requiredVulkanExtensions": [],
       "minAndroidSdk": 29,
-      "releaseNotes": "Mesa Turnip 24.0 Vulkan driver for Adreno"
-    },
-    {
-      "id": "turnip-24.1-arm64",
-      "type": "turnip",
-      "version": "24.1",
-      "abi": "arm64-v8a",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "downloadUrl": "https://example.com/mock/turnip-24.1-arm64.tar.zst",
-      "sizeBytes": 32505856,
-      "compatibilityTags": ["adreno-600", "adreno-700"],
-      "requiredVulkanExtensions": [],
-      "minAndroidSdk": 29,
-      "releaseNotes": "Mesa Turnip 24.1 - Adreno 7xx optimizations"
+      "releaseNotes": "Mesa Turnip 25.3.2 - Vulkan ICD for Qualcomm Adreno (Linux WSI + KGSL build)."
     }
   ]
 }

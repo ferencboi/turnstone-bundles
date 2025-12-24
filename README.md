@@ -2,6 +2,17 @@
 
 Runtime bundles (Wine, box64, DXVK, Mesa Turnip) for the Turnstone Android app.
 
+Build Status: See [BUILD_STATUS.md](BUILD_STATUS.md) for detailed progress and lessons learned.
+
+## Current Status (2025-12-24)
+
+| Bundle | Version | Status |
+|--------|---------|--------|
+| box64 | 0.3.8 | Released |
+| DXVK | 2.5.3 | Released |
+| Turnip | 25.3.2 | Released |
+| Wine | - | Pending |
+
 ## Repository Structure
 
 ```

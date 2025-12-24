@@ -5,6 +5,8 @@ __pycache__/
 
 # Build outputs (but not build scripts)
 build/output/
+build/**/output/
+build/**/*.log
 dist/
 *.tar.zst
 *.tar.gz
@@ -29,4 +31,3 @@ temp/
 .env
 .env.local
 config.local.json
-

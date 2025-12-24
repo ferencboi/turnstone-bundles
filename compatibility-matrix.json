@@ -1,32 +1,32 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2025-12-23T13:00:00Z",
+  "updatedAt": "2025-12-24T18:47:22Z",
   "compatibilitySets": [
+    {
+      "id": "partial-2025-12",
+      "label": "experimental",
+      "displayName": "Partial Build - December 2025",
+      "deviceHints": [],
+      "bundles": {
+        "wine": null,
+        "box64": "0.3.8",
+        "dxvk": "2.5.3",
+        "turnip": "25.3.2"
+      },
+      "notes": "Partial bundle set - box64, DXVK, and Turnip available. Wine build pending."
+    },
     {
       "id": "stable-adreno-2025-12",
       "label": "stable",
       "displayName": "Stable - December 2025 (Adreno)",
       "deviceHints": ["adreno-600", "adreno-700"],
       "bundles": {
-        "wine": "9.0",
+        "wine": null,
         "box64": "0.3.8",
-        "dxvk": "2.4",
-        "turnip": "24.1"
+        "dxvk": "2.5.3",
+        "turnip": "25.3.2"
       },
-      "notes": "Recommended stable configuration for Adreno 6xx/7xx GPUs"
-    },
-    {
-      "id": "minimal-2025-12",
-      "label": "minimal",
-      "displayName": "Minimal - December 2025",
-      "deviceHints": [],
-      "bundles": {
-        "wine": "9.0",
-        "box64": "0.3.8",
-        "dxvk": "2.4",
-        "turnip": "24.1"
-      },
-      "notes": "Basic configuration for testing on any device"
+      "notes": "Recommended configuration for Adreno 6xx/7xx GPUs. Wine build pending."
     }
   ]
 }
