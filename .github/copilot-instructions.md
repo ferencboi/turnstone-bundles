@@ -6,27 +6,59 @@
 
 ---
 
-## 🚀 Quick Context
+## 🎮 Project Focus: Gaming on Android ARM64
 
-This repo builds and publishes the runtime components that the Turnstone Android app downloads:
-- **Wine** - Windows compatibility layer (cross-compiled for Android arm64)
-- **box64** - x86_64 emulator for ARM64
-- **DXVK** - DirectX → Vulkan translation (cross-compiled with MinGW)
-- **Mesa Turnip** - Vulkan driver for Qualcomm Adreno GPUs
+**Turnstone is a Winlator-style app** for running Windows games on Android ARM64 devices with Qualcomm Adreno GPUs. This is NOT a general-purpose Windows compatibility project.
 
-Bundles are distributed via **GitHub Releases** as `.tar.zst` archives.
+**Key Design Principles:**
+- Optimize for gaming performance over broad compatibility
+- Target Adreno 6xx/7xx GPUs specifically
+- Modular architecture (swap components independently)
+- Strip unnecessary features to reduce bundle size
+
+**See Also:** [GAMING_ARCHITECTURE.md](GAMING_ARCHITECTURE.md) for the full technical strategy.
 
 ---
 
-## 🏗️ Architecture at a Glance
+## 🚀 Quick Context
+
+This repo builds and publishes the runtime components that the Turnstone Android app downloads:
+- **Wine** - Windows compatibility layer (Linux x86_64 binary for Box64)
+- **box64** - x86_64 → ARM64 JIT translator (native ARM64)
+- **DXVK** - DirectX 9/10/11 → Vulkan translation (Windows DLLs via MinGW)
+- **Mesa Turnip** - High-performance Vulkan driver for Adreno GPUs (ARM64)
+
+Bundles are distributed via **GitHub Releases** as `.tar.zst` archives.
+
+### Critical Architecture Note
+
+**Wine is NOT cross-compiled for Android.** It is built as a Linux x86_64 binary that runs under Box64's JIT translation. This is the same approach used by Winlator and Termux.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Windows Game (.exe)                                         │
+├─────────────────────────────────────────────────────────────┤
+│  DXVK (DirectX→Vulkan)  │  Wine (Win32→Linux, x86_64)      │
+├─────────────────────────────────────────────────────────────┤
+│  Box64 (x86_64 JIT → ARM64 native)                          │
+├─────────────────────────────────────────────────────────────┤
+│  Turnip (Vulkan ICD for Adreno)                             │
+├─────────────────────────────────────────────────────────────┤
+│  Android ARM64 + KGSL kernel driver                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🏗️ Release Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     GitHub Releases                              │
-│  ├── wine-9.0/wine-9.0-arm64.tar.zst                           │
-│  ├── box64-0.2.8/box64-0.2.8-arm64.tar.zst                     │
-│  ├── dxvk-2.4/dxvk-2.4-arm64.tar.zst                           │
-│  ├── turnip-24.1/turnip-24.1-arm64.tar.zst                     │
+│  ├── wine-9.22/wine-9.22-x86_64.tar.zst    (Linux x86_64)      │
+│  ├── box64-0.3.8/box64-0.3.8-arm64.tar.zst (ARM64 native)      │
+│  ├── dxvk-2.5.3/dxvk-2.5.3-arm64.tar.zst   (Windows DLLs)      │
+│  ├── turnip-25.3.2/turnip-25.3.2-arm64.tar.zst (ARM64)         │
 │  └── index-latest/bundle-index.json, compatibility-matrix.json │
 └─────────────────────────────────────────────────────────────────┘
                               ▲
@@ -35,10 +67,10 @@ Bundles are distributed via **GitHub Releases** as `.tar.zst` archives.
 │                      Build System                                │
 │  build/                                                          │
 │  ├── docker/Dockerfile.base    (Android NDK base image)         │
-│  ├── wine/                     (Wine build)                     │
-│  ├── box64/                    (box64 build)                    │
-│  ├── dxvk/                     (DXVK build)                     │
-│  ├── turnip/                   (Mesa Turnip build)              │
+│  ├── wine/                     (Wine x86_64 Linux build)        │
+│  ├── box64/                    (box64 ARM64 build)              │
+│  ├── dxvk/                     (DXVK MinGW build)               │
+│  ├── turnip/                   (Mesa Turnip ARM64 build)        │
 │  └── build-all.sh              (Orchestrator)                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -352,29 +384,37 @@ This regenerates `bundle-index.json` from all releases and publishes to `index-l
 
 ### Wine
 - Source: `https://gitlab.winehq.org/wine/wine`
-- Cross-compiled with Android NDK
-- Requires: Clang, Android headers
+- **Architecture:** Linux x86_64 (NOT Android)
+- Build environment: Ubuntu 22.04 container with MinGW
+- WoW64 mode enables 32-bit + 64-bit support in single binary
+- Output: `wine-{version}-x86_64.tar.zst`
 
 ### box64
 - Source: `https://github.com/ptitSeb/box64`
+- **Architecture:** Native Android ARM64
 - Built with CMake + Android NDK
-- ARM64 dynarec enabled
+- ARM64 dynarec enabled for gaming performance
+- Output: `box64-{version}-arm64.tar.zst`
 
 ### DXVK
 - Source: `https://github.com/doitsujin/dxvk`
+- **Architecture:** Windows DLLs (x86 + x64)
 - Cross-compiled with MinGW (produces Windows DLLs)
-- Output: `d3d9.dll`, `d3d10core.dll`, `d3d11.dll`, `dxgi.dll`
+- Output DLLs: `d3d9.dll`, `d3d10core.dll`, `d3d11.dll`, `dxgi.dll`
+- Output: `dxvk-{version}-arm64.tar.zst` (contains Windows DLLs)
 
 ### Mesa Turnip
 - Source: `https://gitlab.freedesktop.org/mesa/mesa`
-- Built with Meson + Android NDK
-- Output: `libvulkan_freedreno.so` (Vulkan ICD)
+- **Architecture:** Android ARM64 shared library
+- Built with Meson + Android NDK, KGSL backend
+- Output: `libvulkan_freedreno.so` (Vulkan ICD for Adreno)
+- Output: `turnip-{version}-arm64.tar.zst`
 
 ---
 
 ## 🔗 Related
 
 - **Turnstone** repo: The Android app that consumes these bundles
+- **GAMING_ARCHITECTURE.md**: Full technical strategy document
 - Published to: `https://github.com/ferencboi/turnstone-bundles/releases`
 - Index URL: `https://github.com/ferencboi/turnstone-bundles/releases/download/index-latest/bundle-index.json`
-

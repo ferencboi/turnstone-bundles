@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": "2025-12-24T18:47:22Z",
+  "schemaVersion": 2,
+  "updatedAt": "2025-12-25T12:00:00Z",
   "bundles": [
     {
       "id": "box64-0.3.8-arm64",
@@ -10,6 +10,7 @@
       "sha256": "550bfe8c5afacdd14bbf27c9abd212044a887ba83e434ecbae67b383cad01ed2",
       "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/box64-0.3.8/box64-0.3.8-arm64.tar.zst",
       "sizeBytes": 3466940,
+      "installedSizeBytes": 20418560,
       "compatibilityTags": [],
       "requiredVulkanExtensions": [],
       "minAndroidSdk": 29,
@@ -23,6 +24,7 @@
       "sha256": "48a93ca9e52a2da82e13bd2fc6f1de4dbb53bb52febe4aa77727a55f1355a023",
       "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/dxvk-2.5.3/dxvk-2.5.3-arm64.tar.zst",
       "sizeBytes": 4186091,
+      "installedSizeBytes": 25344000,
       "compatibilityTags": [],
       "requiredVulkanExtensions": [
         "VK_KHR_maintenance1",
@@ -39,6 +41,7 @@
       "sha256": "fb8bed77facb1a7215fa2fe3483915874fb5552f742ea0ef3852a36b1388c009",
       "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/turnip-25.3.2/turnip-25.3.2-arm64.tar.zst",
       "sizeBytes": 1715942,
+      "installedSizeBytes": 12308480,
       "compatibilityTags": [
         "adreno-600",
         "adreno-700"
@@ -46,6 +49,23 @@
       "requiredVulkanExtensions": [],
       "minAndroidSdk": 29,
       "releaseNotes": "Mesa Turnip 25.3.2 - Vulkan ICD for Qualcomm Adreno (Linux WSI + KGSL build)."
+    },
+    {
+      "id": "wine-9.22-x86_64",
+      "type": "wine",
+      "version": "9.22",
+      "abi": "x86_64",
+      "sha256": "837212693737ae33ef45c7ea9440e2e17fff433042378129f9230787cf7cd6ba",
+      "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/wine-9.22/wine-9.22-x86_64.tar.zst",
+      "sizeBytes": 228493083,
+      "installedSizeBytes": 1469337600,
+      "compatibilityTags": [
+        "wow64",
+        "full-build"
+      ],
+      "requiredVulkanExtensions": [],
+      "minAndroidSdk": 29,
+      "releaseNotes": "Wine 9.22 - Full build (Linux x86_64 for Box64). WoW64 mode supports 32-bit and 64-bit Windows apps. Experimental release for development/testing."
     }
   ]
 }

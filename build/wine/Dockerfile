@@ -1,44 +1,84 @@
-# Docker image for building Wine for Android
+# Build Wine for Linux x86_64 (runs under box64 on Android ARM64)
 #
-# Wine requires a two-stage build process:
-# 1. Build native tools on the host
-# 2. Cross-compile for Android using those tools
+# Wine is NOT cross-compiled for Android. Instead we build a native Linux x86_64
+# Wine which is then executed by box64 (x86_64 emulator) on the Android device.
+# This is the same approach used by Winlator and Termux.
 #
 # Build: docker build -t turnstone-wine-builder -f Dockerfile .
 # Run: docker run --rm -v $(pwd)/output:/output turnstone-wine-builder [version]
 
-FROM turnstone-build-base
+FROM ubuntu:22.04
 
-LABEL description="Build environment for Wine Android bundle"
+LABEL description="Build environment for Wine x86_64 bundle (for box64)"
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Wine build dependencies
 RUN apt-get update && apt-get install -y \
-    # Required for Wine configure/build
+    # Build essentials
+    build-essential \
+    git \
+    wget \
+    curl \
+    ca-certificates \
+    pkg-config \
+    autoconf \
+    automake \
+    libtool \
     flex \
     bison \
     gettext \
-    # For native tools build
-    gcc \
-    g++ \
-    # Wine optional deps (some may be needed even for minimal build)
+    # MinGW for PE DLLs
+    gcc-mingw-w64 \
+    g++-mingw-w64 \
+    mingw-w64-tools \
+    # Wine dependencies (64-bit)
+    libx11-dev \
+    libxext-dev \
+    libxrandr-dev \
+    libxcursor-dev \
+    libxi-dev \
+    libxrender-dev \
+    libxfixes-dev \
+    libxcomposite-dev \
     libfreetype-dev \
+    libfontconfig1-dev \
     libpng-dev \
     libjpeg-dev \
     libxml2-dev \
     libxslt1-dev \
-    # Perl for some Wine scripts
-    perl \
+    libgnutls28-dev \
+    libvulkan-dev \
+    libsdl2-dev \
+    libopenal-dev \
+    libpulse-dev \
+    libasound2-dev \
+    libcups2-dev \
+    libdbus-1-dev \
+    libusb-1.0-0-dev \
+    libgphoto2-dev \
+    libsane-dev \
+    libv4l-dev \
+    libkrb5-dev \
+    liblcms2-dev \
+    libpcap-dev \
+    libudev-dev \
+    unixodbc-dev \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    # Compression
+    zstd \
+    xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy build scripts
 COPY build-wine.sh /build/
 COPY patches/ /build/patches/
-COPY --from=scripts /build/scripts/common.sh /build/scripts/
 
 RUN chmod +x /build/build-wine.sh
 
 WORKDIR /build
 
 ENTRYPOINT ["/build/build-wine.sh"]
-CMD ["9.0"]
+CMD ["9.22"]
 

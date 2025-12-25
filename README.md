@@ -1,17 +1,44 @@
 # Turnstone Bundles
 
-Runtime bundles (Wine, box64, DXVK, Mesa Turnip) for the Turnstone Android app.
+Runtime bundles for **Turnstone**, a Winlator-style Android app for running Windows games on ARM64 devices with Qualcomm Adreno GPUs.
 
-Build Status: See [BUILD_STATUS.md](BUILD_STATUS.md) for detailed progress and lessons learned.
+> **🎮 Gaming-Focused:** This project optimizes for gaming performance, not general Windows compatibility.  
+> See [GAMING_ARCHITECTURE.md](.github/GAMING_ARCHITECTURE.md) for the technical strategy.
+
+## Project Goal
+
+Run Windows x86/x64 games on Android ARM64 through a modular stack:
+- **Box64**: x86_64 → ARM64 CPU translation
+- **Wine**: Windows compatibility layer (runs under Box64)
+- **DXVK**: DirectX → Vulkan translation
+- **Mesa Turnip**: High-performance Vulkan driver for Adreno GPUs
 
 ## Current Status (2025-12-24)
 
-| Bundle | Version | Status |
-|--------|---------|--------|
-| box64 | 0.3.8 | Released |
-| DXVK | 2.5.3 | Released |
-| Turnip | 25.3.2 | Released |
-| Wine | - | Pending |
+| Bundle | Version | Status | Notes |
+|--------|---------|--------|-------|
+| box64 | 0.3.8 | ✅ Released | Native ARM64 dynarec |
+| DXVK | 2.5.3 | ✅ Released | DX9/10/11 → Vulkan |
+| Turnip | 25.3.2 | ✅ Released | Adreno 6xx/7xx Vulkan |
+| Wine | 9.22 | ✅ Released | Linux x86_64 for Box64 (218 MB) |
+
+**Build Status:** See [BUILD_STATUS.md](BUILD_STATUS.md) for detailed progress and lessons learned.
+
+## Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Windows Game (.exe)                       │
+├─────────────────────────────────────────────────────────────┤
+│  DXVK (DirectX → Vulkan)  │  Wine (Windows API → Linux)    │
+├─────────────────────────────────────────────────────────────┤
+│              Box64 (x86_64 → ARM64 JIT)                     │
+├─────────────────────────────────────────────────────────────┤
+│              Turnip (Vulkan for Adreno)                     │
+├─────────────────────────────────────────────────────────────┤
+│                    Android ARM64                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Repository Structure
 
@@ -83,24 +110,34 @@ export TURNIP_VERSION=24.1.0
 ## Bundle Components
 
 ### Wine
-Windows compatibility layer. Cross-compiled for Android arm64.
+Windows compatibility layer. **Built for Linux x86_64** and executed under Box64.
 - Source: https://gitlab.winehq.org/wine/wine
-- Requires: box64 for x86_64 Windows apps
+- **Architecture:** Linux x86_64 binary (NOT cross-compiled for Android)
+- Uses WoW64 mode (Wine 9.x+) for 32-bit and 64-bit Windows app support
+- Future: Gaming-optimized builds with stripped non-gaming components
+
+> ⚠️ **Note:** Wine runs as a Linux x86_64 process translated by Box64. This is the same approach used by Winlator and Termux Wine.
 
 ### box64
-x86_64 Linux emulator for ARM64. Enables running x86_64 Wine on ARM devices.
+x86_64 → ARM64 dynamic binary translator (JIT). The foundation that makes Wine run on ARM.
 - Source: https://github.com/ptitSeb/box64
-- Native Android support via CMake
+- **Architecture:** Native ARM64 binary
+- Features: Dynarec with aggressive gaming optimizations
+- Translates x86_64 Wine into ARM64 instructions at runtime
 
 ### DXVK
-DirectX 9/10/11 to Vulkan translation layer. Built as Windows DLLs.
+DirectX 9/10/11 to Vulkan translation layer. Enables DirectX games to run on Vulkan.
 - Source: https://github.com/doitsujin/dxvk
-- Cross-compiled with MinGW
+- **Architecture:** Windows DLLs (x86/x64) - MinGW cross-compiled
+- Replaces Wine's DirectX implementation with high-performance Vulkan calls
+- Async shader compilation reduces stutter
 
 ### Mesa Turnip
-Open-source Vulkan driver for Qualcomm Adreno GPUs.
+Open-source Vulkan driver for Qualcomm Adreno GPUs. Better performance than stock drivers.
 - Source: https://gitlab.freedesktop.org/mesa/mesa
-- Provides better Vulkan performance than stock drivers on supported devices
+- **Architecture:** ARM64 shared library
+- Supports Adreno 6xx and 7xx (experimental) GPU series
+- Built with KGSL backend for Android kernel compatibility
 
 ## Releases
 
