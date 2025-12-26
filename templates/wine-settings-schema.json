@@ -1,0 +1,430 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ferencboi/turnstone-bundles/schemas/wine-settings-v1.json",
+  "title": "Turnstone Wine Settings Schema",
+  "description": "Defines all configurable Wine runtime settings for Turnstone app",
+  "settingsSchemaVersion": 1,
+
+  "settings": {
+    "environment": {
+      "WINEDEBUG": {
+        "type": "string",
+        "default": "-all",
+        "description": "Wine debug output channels. Use -all to disable all debug output for best performance.",
+        "category": "debugging",
+        "examples": ["-all", "+loaddll", "+err,+warn", "+relay"]
+      },
+      "WINEESYNC": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable eventfd-based synchronization. Faster than wineserver sync. Requires sufficient file descriptor limits.",
+        "category": "performance",
+        "requires": ["esync"]
+      },
+      "WINEFSYNC": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable futex-based synchronization. Fastest option but requires kernel 5.16+ with futex2 support.",
+        "category": "performance",
+        "requires": ["fsync"]
+      },
+      "WINE_LARGE_ADDRESS_AWARE": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow 32-bit applications to use more than 2GB of memory. Helps prevent out-of-memory crashes.",
+        "category": "compatibility"
+      },
+      "WINEDLLOVERRIDES": {
+        "type": "string",
+        "default": "",
+        "description": "Override DLL load order. Format: dll1=native,builtin;dll2=builtin. Used to force DXVK over Wine's built-in DirectX.",
+        "category": "compatibility",
+        "examples": [
+          "d3d9=native,builtin",
+          "d3d9,d3d10core,d3d11,dxgi=n,b",
+          "winemenubuilder.exe=disabled"
+        ]
+      },
+      "WINEPREFIX": {
+        "type": "string",
+        "default": "",
+        "description": "Path to the Wine prefix (virtual Windows installation). Managed by Turnstone app.",
+        "category": "system",
+        "managed": true
+      }
+    },
+
+    "registry": {
+      "wine.direct3d.MaxShaderModelVS": {
+        "path": "HKCU\\Software\\Wine\\Direct3D",
+        "value": "MaxShaderModelVS",
+        "type": "string",
+        "default": null,
+        "description": "Limit vertex shader model version. Use 3.0 for better Turnip compatibility on some games.",
+        "category": "graphics",
+        "examples": ["2.0", "3.0", "4.0", "5.0"]
+      },
+      "wine.direct3d.MaxShaderModelPS": {
+        "path": "HKCU\\Software\\Wine\\Direct3D",
+        "value": "MaxShaderModelPS",
+        "type": "string",
+        "default": null,
+        "description": "Limit pixel shader model version. Use 3.0 for better Turnip compatibility on some games.",
+        "category": "graphics",
+        "examples": ["2.0", "3.0", "4.0", "5.0"]
+      },
+      "wine.direct3d.csmt": {
+        "path": "HKCU\\Software\\Wine\\Direct3D",
+        "value": "csmt",
+        "type": "dword",
+        "default": 3,
+        "description": "Command stream multi-threading mode. 0=disabled, 1=enabled, 3=enabled with serialization.",
+        "category": "performance",
+        "min": 0,
+        "max": 3
+      },
+      "wine.direct3d.UseGLSL": {
+        "path": "HKCU\\Software\\Wine\\Direct3D",
+        "value": "UseGLSL",
+        "type": "string",
+        "default": "enabled",
+        "description": "Use GLSL shaders instead of ARB. Usually should be enabled.",
+        "category": "graphics",
+        "enum": ["enabled", "disabled"]
+      },
+      "wine.x11.UseTakeFocus": {
+        "path": "HKCU\\Software\\Wine\\X11 Driver",
+        "value": "UseTakeFocus",
+        "type": "string",
+        "default": "Y",
+        "description": "Window focus handling via X11. Set to N on Android to prevent focus issues.",
+        "category": "display",
+        "enum": ["Y", "N"]
+      },
+      "wine.x11.GrabPointer": {
+        "path": "HKCU\\Software\\Wine\\X11 Driver",
+        "value": "GrabPointer",
+        "type": "string",
+        "default": "N",
+        "description": "Capture mouse pointer inside Wine window. Set to Y for games that need mouse capture.",
+        "category": "input",
+        "enum": ["Y", "N"]
+      },
+      "wine.x11.GrabFullscreen": {
+        "path": "HKCU\\Software\\Wine\\X11 Driver",
+        "value": "GrabFullscreen",
+        "type": "string",
+        "default": "N",
+        "description": "Grab all input when running fullscreen. Set to Y for fullscreen games.",
+        "category": "input",
+        "enum": ["Y", "N"]
+      },
+      "wine.x11.Decorated": {
+        "path": "HKCU\\Software\\Wine\\X11 Driver",
+        "value": "Decorated",
+        "type": "string",
+        "default": "Y",
+        "description": "Show window decorations (title bar, borders). Set to N for borderless.",
+        "category": "display",
+        "enum": ["Y", "N"]
+      },
+      "wine.x11.Managed": {
+        "path": "HKCU\\Software\\Wine\\X11 Driver",
+        "value": "Managed",
+        "type": "string",
+        "default": "Y",
+        "description": "Let window manager control Wine windows. Usually Y.",
+        "category": "display",
+        "enum": ["Y", "N"]
+      },
+      "wine.dlloverrides.winemenubuilder": {
+        "path": "HKCU\\Software\\Wine\\DllOverrides",
+        "value": "winemenubuilder.exe",
+        "type": "string",
+        "default": "disabled",
+        "description": "Disable desktop integration. Should be disabled on Android.",
+        "category": "system",
+        "enum": ["", "disabled"]
+      },
+      "wine.services.spooler": {
+        "path": "HKLM\\System\\CurrentControlSet\\Services\\Spooler",
+        "value": "Start",
+        "type": "dword",
+        "default": 4,
+        "description": "Print spooler service. 4=disabled. Disable for gaming.",
+        "category": "services",
+        "enum": [2, 3, 4]
+      },
+      "wine.services.wuauserv": {
+        "path": "HKLM\\System\\CurrentControlSet\\Services\\wuauserv",
+        "value": "Start",
+        "type": "dword",
+        "default": 4,
+        "description": "Windows Update service. 4=disabled. Always disable.",
+        "category": "services",
+        "enum": [2, 3, 4]
+      }
+    },
+
+    "dxvk": {
+      "DXVK_ASYNC": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable asynchronous shader compilation. Reduces stutter when encountering new shaders.",
+        "category": "performance"
+      },
+      "DXVK_STATE_CACHE": {
+        "type": "boolean",
+        "default": true,
+        "description": "Cache pipeline state to disk. Faster subsequent game loads.",
+        "category": "performance"
+      },
+      "DXVK_STATE_CACHE_PATH": {
+        "type": "string",
+        "default": "",
+        "description": "Path to store DXVK state cache. Managed by Turnstone app.",
+        "category": "system",
+        "managed": true
+      },
+      "DXVK_LOG_LEVEL": {
+        "type": "enum",
+        "values": ["none", "error", "warn", "info", "debug"],
+        "default": "none",
+        "description": "DXVK logging verbosity. Use none for best performance.",
+        "category": "debugging"
+      },
+      "DXVK_LOG_PATH": {
+        "type": "string",
+        "default": "",
+        "description": "Path for DXVK log files. Leave empty to disable file logging.",
+        "category": "debugging"
+      },
+      "DXVK_HUD": {
+        "type": "string",
+        "default": "",
+        "description": "DXVK overlay elements. Comma-separated list.",
+        "category": "debugging",
+        "examples": ["fps", "fps,memory", "fps,devinfo,frametimes", "full", "1"]
+      },
+      "DXVK_FRAME_RATE": {
+        "type": "integer",
+        "default": 0,
+        "description": "Frame rate limit. 0=unlimited. Useful for battery saving.",
+        "category": "performance",
+        "min": 0,
+        "max": 240
+      },
+      "DXVK_CONFIG_FILE": {
+        "type": "string",
+        "default": "",
+        "description": "Path to custom dxvk.conf file for advanced settings.",
+        "category": "system"
+      }
+    },
+
+    "turnip": {
+      "TU_DEBUG": {
+        "type": "string",
+        "default": "",
+        "description": "Turnip debug flags. Use noconform to skip conformance checks for better performance.",
+        "category": "debugging",
+        "examples": ["noconform", "norobust", "noconform,norobust", "perf"]
+      },
+      "TU_GMEM": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable tile-based rendering (GMEM). Should be enabled for Adreno.",
+        "category": "performance"
+      },
+      "mesa_glthread": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable threaded OpenGL optimization. Improves performance on multi-core.",
+        "category": "performance"
+      },
+      "MESA_NO_ERROR": {
+        "type": "boolean",
+        "default": false,
+        "description": "Skip OpenGL error checking. Faster but may hide bugs. Use with caution.",
+        "category": "performance"
+      },
+      "MESA_VK_WSI_PRESENT_MODE": {
+        "type": "enum",
+        "values": ["fifo", "relaxed", "mailbox", "immediate"],
+        "default": "mailbox",
+        "description": "Vulkan present mode. mailbox=triple buffer, immediate=no vsync.",
+        "category": "display"
+      },
+      "VK_ICD_FILENAMES": {
+        "type": "string",
+        "default": "",
+        "description": "Path to Vulkan ICD JSON file. Managed by Turnstone app.",
+        "category": "system",
+        "managed": true
+      }
+    },
+
+    "box64": {
+      "BOX64_DYNAREC": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable dynamic recompilation. Must be enabled for acceptable performance.",
+        "category": "performance"
+      },
+      "BOX64_DYNAREC_BIGBLOCK": {
+        "type": "boolean",
+        "default": true,
+        "description": "Use larger JIT blocks. Better performance but more memory usage.",
+        "category": "performance"
+      },
+      "BOX64_DYNAREC_STRONGMEM": {
+        "type": "enum",
+        "values": ["0", "1", "2"],
+        "default": "0",
+        "description": "Memory model strictness. 0=relaxed (faster), 2=strict (more compatible).",
+        "category": "compatibility"
+      },
+      "BOX64_DYNAREC_FASTNAN": {
+        "type": "boolean",
+        "default": true,
+        "description": "Fast NaN handling. Better performance but may break some games.",
+        "category": "performance"
+      },
+      "BOX64_DYNAREC_FASTROUND": {
+        "type": "boolean",
+        "default": true,
+        "description": "Fast floating-point rounding. Better performance but may break some games.",
+        "category": "performance"
+      },
+      "BOX64_DYNAREC_SAFEFLAGS": {
+        "type": "enum",
+        "values": ["0", "1", "2"],
+        "default": "0",
+        "description": "CPU flags handling. 0=unsafe (faster), 2=safe (more compatible).",
+        "category": "compatibility"
+      },
+      "BOX64_DYNAREC_CALLRET": {
+        "type": "boolean",
+        "default": true,
+        "description": "Optimize call/ret sequences. Should be enabled.",
+        "category": "performance"
+      },
+      "BOX64_LOG": {
+        "type": "enum",
+        "values": ["0", "1", "2", "3"],
+        "default": "0",
+        "description": "Box64 logging level. 0=none, 3=debug. Use 0 for performance.",
+        "category": "debugging"
+      }
+    }
+  },
+
+  "categories": {
+    "performance": {
+      "label": "Performance",
+      "description": "Settings that affect speed and frame rate",
+      "icon": "speed"
+    },
+    "compatibility": {
+      "label": "Compatibility",
+      "description": "Settings that affect game compatibility",
+      "icon": "tune"
+    },
+    "graphics": {
+      "label": "Graphics",
+      "description": "DirectX and shader settings",
+      "icon": "display"
+    },
+    "input": {
+      "label": "Input",
+      "description": "Mouse and keyboard capture settings",
+      "icon": "gamepad"
+    },
+    "display": {
+      "label": "Display",
+      "description": "Window and fullscreen settings",
+      "icon": "monitor"
+    },
+    "debugging": {
+      "label": "Debugging",
+      "description": "Logging and diagnostic settings",
+      "icon": "bug"
+    },
+    "services": {
+      "label": "Services",
+      "description": "Windows service settings",
+      "icon": "settings"
+    },
+    "system": {
+      "label": "System",
+      "description": "System paths and managed settings",
+      "icon": "folder"
+    }
+  },
+
+  "presets": {
+    "performance": {
+      "label": "Maximum Performance",
+      "description": "Fastest settings, may reduce compatibility",
+      "settings": {
+        "WINEDEBUG": "-all",
+        "WINEESYNC": true,
+        "WINEFSYNC": true,
+        "DXVK_ASYNC": true,
+        "DXVK_STATE_CACHE": true,
+        "DXVK_LOG_LEVEL": "none",
+        "TU_DEBUG": "noconform",
+        "mesa_glthread": true,
+        "MESA_NO_ERROR": true,
+        "BOX64_DYNAREC": true,
+        "BOX64_DYNAREC_BIGBLOCK": true,
+        "BOX64_DYNAREC_STRONGMEM": "0",
+        "BOX64_DYNAREC_FASTNAN": true,
+        "BOX64_DYNAREC_FASTROUND": true,
+        "BOX64_DYNAREC_SAFEFLAGS": "0"
+      }
+    },
+    "balanced": {
+      "label": "Balanced",
+      "description": "Good performance with reasonable compatibility",
+      "settings": {
+        "WINEDEBUG": "-all",
+        "WINEESYNC": true,
+        "WINEFSYNC": true,
+        "DXVK_ASYNC": true,
+        "DXVK_STATE_CACHE": true,
+        "DXVK_LOG_LEVEL": "none",
+        "TU_DEBUG": "noconform",
+        "mesa_glthread": true,
+        "MESA_NO_ERROR": false,
+        "BOX64_DYNAREC": true,
+        "BOX64_DYNAREC_BIGBLOCK": true,
+        "BOX64_DYNAREC_STRONGMEM": "1",
+        "BOX64_DYNAREC_FASTNAN": true,
+        "BOX64_DYNAREC_FASTROUND": true,
+        "BOX64_DYNAREC_SAFEFLAGS": "1"
+      }
+    },
+    "compatibility": {
+      "label": "Maximum Compatibility",
+      "description": "Safest settings for problematic games",
+      "settings": {
+        "WINEDEBUG": "-all",
+        "WINEESYNC": true,
+        "WINEFSYNC": false,
+        "DXVK_ASYNC": false,
+        "DXVK_STATE_CACHE": true,
+        "DXVK_LOG_LEVEL": "none",
+        "TU_DEBUG": "",
+        "mesa_glthread": false,
+        "MESA_NO_ERROR": false,
+        "BOX64_DYNAREC": true,
+        "BOX64_DYNAREC_BIGBLOCK": false,
+        "BOX64_DYNAREC_STRONGMEM": "2",
+        "BOX64_DYNAREC_FASTNAN": false,
+        "BOX64_DYNAREC_FASTROUND": false,
+        "BOX64_DYNAREC_SAFEFLAGS": "2"
+      }
+    }
+  }
+}

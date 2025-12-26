@@ -51,10 +51,12 @@ docker build -t turnstone-build-base -f "${BUILD_DIR}/docker/Dockerfile.base" "$
 build_bundle() {
     local name="$1"
     local version="$2"
+    local profile="${3:-}"
     local build_dir="${BUILD_DIR}/${name}"
+    local container_name="turnstone-${name}-build-$$"
 
     log_info "========================================="
-    log_info "Building ${name} ${version}"
+    log_info "Building ${name} ${version}${profile:+ (profile: $profile)}"
     log_info "========================================="
 
     # Build the Docker image for this bundle
@@ -63,12 +65,21 @@ build_bundle() {
         -f "${build_dir}/Dockerfile" \
         "${build_dir}"
 
-    # Run the build
-    docker run --rm \
+    # Run the build (NO --rm flag - keep container on failure for debugging)
+    # Container will be cleaned up after successful packaging
+    local build_args=("${version}")
+    [ -n "${profile}" ] && build_args+=("${profile}")
+
+    docker run \
+        --name "${container_name}" \
         -v "${OUTPUT_DIR}:/output" \
         -v "${BUILD_DIR}/scripts:/build/scripts:ro" \
         "turnstone-${name}-builder" \
-        "${version}"
+        "${build_args[@]}"
+
+    # Build succeeded - clean up container
+    log_info "Build succeeded, cleaning up container..."
+    docker rm "${container_name}" >/dev/null 2>&1 || true
 
     log_info "${name} ${version} build complete!"
 }

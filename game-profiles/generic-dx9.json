@@ -1,0 +1,117 @@
+{
+  "id": "generic-dx9",
+  "name": "Generic DirectX 9",
+  "version": "1.0.0",
+  "author": "Turnstone Team",
+
+  "gameInfo": {
+    "title": "Generic DirectX 9 Game",
+    "directXVersion": "9.0c",
+    "architecture": "32-bit"
+  },
+
+  "minimumWineVersion": "9.0",
+
+  "requiredCapabilities": [
+    "wow64",
+    "vulkan"
+  ],
+
+  "basePreset": "balanced",
+
+  "environment": {
+    "WINEDEBUG": "-all",
+    "WINEESYNC": "1",
+    "WINEFSYNC": "1",
+    "WINE_LARGE_ADDRESS_AWARE": "1",
+
+    "DXVK_ASYNC": "1",
+    "DXVK_STATE_CACHE": "1",
+    "DXVK_LOG_LEVEL": "none",
+
+    "TU_DEBUG": "noconform",
+    "mesa_glthread": "true",
+
+    "BOX64_DYNAREC": "1",
+    "BOX64_DYNAREC_BIGBLOCK": "1",
+    "BOX64_DYNAREC_STRONGMEM": "1",
+    "BOX64_DYNAREC_FASTNAN": "1",
+    "BOX64_DYNAREC_FASTROUND": "1"
+  },
+
+  "dllOverrides": {
+    "d3d9": "native,builtin",
+    "winemenubuilder.exe": "disabled"
+  },
+
+  "registry": [
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "d3d9",
+      "data": "native",
+      "type": "REG_SZ",
+      "comment": "Use DXVK for DirectX 9"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      "value": "csmt",
+      "data": 3,
+      "type": "REG_DWORD",
+      "comment": "Enable command stream multi-threading"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "UseTakeFocus",
+      "data": "N",
+      "type": "REG_SZ",
+      "comment": "Prevent focus issues on Android"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "GrabPointer",
+      "data": "Y",
+      "type": "REG_SZ",
+      "comment": "Capture mouse for games"
+    },
+    {
+      "path": "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\Spooler",
+      "value": "Start",
+      "data": 4,
+      "type": "REG_DWORD",
+      "comment": "Disable print spooler"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "winemenubuilder.exe",
+      "data": "disabled",
+      "type": "REG_SZ",
+      "comment": "Disable desktop integration"
+    }
+  ],
+
+  "gameArguments": [],
+  "wineArguments": [],
+
+  "virtualDesktop": {
+    "enabled": false,
+    "width": 1280,
+    "height": 720,
+    "name": "Game"
+  },
+
+  "notes": "Generic profile for DirectX 9 games. Use this as a starting point and adjust settings based on your specific game.\n\nIf the game has issues:\n1. Try setting BOX64_DYNAREC_STRONGMEM to 2\n2. Try disabling DXVK_ASYNC\n3. Check if the game needs specific DLLs\n\nFor online games, ensure gnutls capability is available.",
+
+  "knownIssues": [],
+
+  "testedWith": [],
+
+  "tags": [
+    "dx9",
+    "generic",
+    "template"
+  ],
+
+  "relatedProfiles": [
+    "generic-dx11"
+  ]
+}

@@ -3,7 +3,13 @@
 # DXVK builds Windows DLLs using MinGW cross-compilation
 #
 # Build: docker build -t turnstone-dxvk-builder -f Dockerfile .
-# Run: docker run --rm -v $(pwd)/output:/output turnstone-dxvk-builder [version]
+#
+# Usage (do NOT use --rm, clean up manually after success):
+#   docker run --name dxvk-build -v $(pwd)/output:/output turnstone-dxvk-builder [version]
+#   docker rm dxvk-build  # Only after successful build!
+#
+# On failure, container is preserved - extract artifacts with:
+#   docker cp dxvk-build:/build/ ./recovered-build/
 
 FROM turnstone-build-base
 

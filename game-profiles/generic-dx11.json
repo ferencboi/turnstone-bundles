@@ -1,0 +1,133 @@
+{
+  "id": "generic-dx11",
+  "name": "Generic DirectX 11",
+  "version": "1.0.0",
+  "author": "Turnstone Team",
+
+  "gameInfo": {
+    "title": "Generic DirectX 11 Game",
+    "directXVersion": "11",
+    "architecture": "64-bit"
+  },
+
+  "minimumWineVersion": "9.0",
+
+  "requiredCapabilities": [
+    "wow64",
+    "vulkan"
+  ],
+
+  "basePreset": "balanced",
+
+  "environment": {
+    "WINEDEBUG": "-all",
+    "WINEESYNC": "1",
+    "WINEFSYNC": "1",
+    "WINE_LARGE_ADDRESS_AWARE": "1",
+
+    "DXVK_ASYNC": "1",
+    "DXVK_STATE_CACHE": "1",
+    "DXVK_LOG_LEVEL": "none",
+
+    "TU_DEBUG": "noconform",
+    "mesa_glthread": "true",
+
+    "BOX64_DYNAREC": "1",
+    "BOX64_DYNAREC_BIGBLOCK": "1",
+    "BOX64_DYNAREC_STRONGMEM": "1",
+    "BOX64_DYNAREC_FASTNAN": "1",
+    "BOX64_DYNAREC_FASTROUND": "1"
+  },
+
+  "dllOverrides": {
+    "d3d11": "native,builtin",
+    "d3d10core": "native,builtin",
+    "dxgi": "native,builtin",
+    "winemenubuilder.exe": "disabled"
+  },
+
+  "registry": [
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "d3d11",
+      "data": "native",
+      "type": "REG_SZ",
+      "comment": "Use DXVK for DirectX 11"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "d3d10core",
+      "data": "native",
+      "type": "REG_SZ",
+      "comment": "Use DXVK for DirectX 10"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "dxgi",
+      "data": "native",
+      "type": "REG_SZ",
+      "comment": "Use DXVK DXGI"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      "value": "csmt",
+      "data": 3,
+      "type": "REG_DWORD",
+      "comment": "Enable command stream multi-threading"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "UseTakeFocus",
+      "data": "N",
+      "type": "REG_SZ",
+      "comment": "Prevent focus issues on Android"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "GrabPointer",
+      "data": "Y",
+      "type": "REG_SZ",
+      "comment": "Capture mouse for games"
+    },
+    {
+      "path": "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\Spooler",
+      "value": "Start",
+      "data": 4,
+      "type": "REG_DWORD",
+      "comment": "Disable print spooler"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "winemenubuilder.exe",
+      "data": "disabled",
+      "type": "REG_SZ",
+      "comment": "Disable desktop integration"
+    }
+  ],
+
+  "gameArguments": [],
+  "wineArguments": [],
+
+  "virtualDesktop": {
+    "enabled": false,
+    "width": 1920,
+    "height": 1080,
+    "name": "Game"
+  },
+
+  "notes": "Generic profile for DirectX 11 games. Use this as a starting point and adjust settings based on your specific game.\n\nDirectX 11 games are typically more demanding than DX9. Performance will vary based on:\n- Game complexity\n- Device GPU (Adreno model)\n- Resolution settings\n\nTips for better performance:\n1. Lower in-game resolution\n2. Disable anti-aliasing\n3. Use medium/low texture settings\n4. Enable DXVK_ASYNC for shader compilation",
+
+  "knownIssues": [],
+
+  "testedWith": [],
+
+  "tags": [
+    "dx11",
+    "generic",
+    "template"
+  ],
+
+  "relatedProfiles": [
+    "generic-dx9"
+  ]
+}

@@ -1,7 +1,13 @@
 # Docker image for building Mesa Turnip for Android
 #
 # Build: docker build -t turnstone-turnip-builder -f Dockerfile .
-# Run: docker run --rm -v $(pwd)/output:/output turnstone-turnip-builder [version]
+#
+# Usage (do NOT use --rm, clean up manually after success):
+#   docker run --name turnip-build -v $(pwd)/output:/output turnstone-turnip-builder [version]
+#   docker rm turnip-build  # Only after successful build!
+#
+# On failure, container is preserved - extract artifacts with:
+#   docker cp turnip-build:/build/ ./recovered-build/
 #
 # Approach: Build Mesa for Linux (not Android platform) with KGSL backend
 # This is the same method used by Termux and Winlator.

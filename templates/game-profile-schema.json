@@ -1,0 +1,363 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ferencboi/turnstone-bundles/schemas/game-profile-v1.json",
+  "title": "Turnstone Game Profile Schema",
+  "description": "Defines the structure of game-specific runtime configuration profiles",
+  "gameProfileSchemaVersion": 1,
+
+  "type": "object",
+  "required": ["id", "name", "version"],
+
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique profile identifier. Use kebab-case (lowercase with hyphens).",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "examples": ["guild-wars", "generic-dx9", "skyrim-se"]
+    },
+
+    "name": {
+      "type": "string",
+      "description": "Human-readable profile name displayed in UI.",
+      "examples": ["Guild Wars (All Campaigns)", "Generic DirectX 9"]
+    },
+
+    "version": {
+      "type": "string",
+      "description": "Profile version using semantic versioning.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0", "1.2.3"]
+    },
+
+    "author": {
+      "type": "string",
+      "description": "Profile author or maintainer.",
+      "examples": ["Turnstone Team", "Community"]
+    },
+
+    "gameInfo": {
+      "type": "object",
+      "description": "Information about the target game.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Full game title."
+        },
+        "developer": {
+          "type": "string",
+          "description": "Game developer studio."
+        },
+        "publisher": {
+          "type": "string",
+          "description": "Game publisher."
+        },
+        "releaseYear": {
+          "type": "integer",
+          "description": "Original release year.",
+          "minimum": 1990,
+          "maximum": 2030
+        },
+        "directXVersion": {
+          "type": "string",
+          "description": "DirectX version used by the game.",
+          "enum": ["7", "8", "8.1", "9", "9.0c", "10", "10.1", "11", "11.1", "12"]
+        },
+        "architecture": {
+          "type": "string",
+          "description": "Game executable architecture.",
+          "enum": ["32-bit", "64-bit", "both"],
+          "default": "32-bit"
+        },
+        "executable": {
+          "type": "string",
+          "description": "Main game executable filename.",
+          "examples": ["Gw.exe", "game.exe", "launcher.exe"]
+        },
+        "steamAppId": {
+          "type": "integer",
+          "description": "Steam application ID if available."
+        },
+        "gogId": {
+          "type": "string",
+          "description": "GOG.com game ID if available."
+        },
+        "protonDbUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "ProtonDB page URL for reference."
+        }
+      }
+    },
+
+    "minimumWineVersion": {
+      "type": "string",
+      "description": "Minimum Wine version required for this profile.",
+      "pattern": "^\\d+\\.\\d+$",
+      "examples": ["9.0", "9.22", "10.0"]
+    },
+
+    "requiredCapabilities": {
+      "type": "array",
+      "description": "Wine bundle capabilities required by this profile. Profile will warn if bundle lacks these.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "wow64",
+          "esync",
+          "fsync",
+          "vulkan",
+          "opengl",
+          "pulse-audio",
+          "alsa",
+          "gnutls",
+          "gstreamer",
+          "x11",
+          "freetype",
+          "cups",
+          "sane",
+          "v4l2",
+          "ldap",
+          "krb5",
+          "opencl",
+          "usb"
+        ]
+      },
+      "examples": [["wow64", "gnutls", "pulse-audio"]]
+    },
+
+    "basePreset": {
+      "type": "string",
+      "description": "Start from a predefined preset, then apply overrides.",
+      "enum": ["performance", "balanced", "compatibility"]
+    },
+
+    "environment": {
+      "type": "object",
+      "description": "Environment variables to set before launching Wine.",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          { "type": "boolean" },
+          { "type": "integer" }
+        ]
+      },
+      "examples": [
+        {
+          "WINEDEBUG": "-all",
+          "WINEESYNC": "1",
+          "DXVK_ASYNC": "1"
+        }
+      ]
+    },
+
+    "registry": {
+      "type": "array",
+      "description": "Registry entries to apply to the Wine prefix.",
+      "items": {
+        "type": "object",
+        "required": ["path", "value", "data", "type"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Full registry path.",
+            "examples": [
+              "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+              "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\Spooler"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "description": "Registry value name.",
+            "examples": ["MaxShaderModelVS", "Start"]
+          },
+          "data": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "integer" }
+            ],
+            "description": "Registry value data."
+          },
+          "type": {
+            "type": "string",
+            "description": "Registry value type.",
+            "enum": ["REG_SZ", "REG_DWORD", "REG_BINARY", "REG_EXPAND_SZ", "REG_MULTI_SZ"]
+          },
+          "comment": {
+            "type": "string",
+            "description": "Optional comment explaining this entry."
+          }
+        }
+      }
+    },
+
+    "dllOverrides": {
+      "type": "object",
+      "description": "DLL override settings. Keys are DLL names (without .dll), values are override modes.",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["native", "builtin", "native,builtin", "builtin,native", "disabled", ""]
+      },
+      "examples": [
+        {
+          "d3d9": "native,builtin",
+          "d3d11": "native,builtin",
+          "dxgi": "native,builtin",
+          "winemenubuilder.exe": "disabled"
+        }
+      ]
+    },
+
+    "gameArguments": {
+      "type": "array",
+      "description": "Command-line arguments to pass to the game executable.",
+      "items": { "type": "string" },
+      "examples": [["-bmp", "-nosound", "-windowed"]]
+    },
+
+    "wineArguments": {
+      "type": "array",
+      "description": "Command-line arguments to pass to Wine itself (before the executable).",
+      "items": { "type": "string" },
+      "examples": [["explorer", "/desktop=Game,1920x1080"]]
+    },
+
+    "virtualDesktop": {
+      "type": "object",
+      "description": "Virtual desktop settings for windowed mode.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run game in a virtual desktop window."
+        },
+        "width": {
+          "type": "integer",
+          "default": 1280,
+          "description": "Virtual desktop width in pixels.",
+          "minimum": 640,
+          "maximum": 3840
+        },
+        "height": {
+          "type": "integer",
+          "default": 720,
+          "description": "Virtual desktop height in pixels.",
+          "minimum": 480,
+          "maximum": 2160
+        },
+        "name": {
+          "type": "string",
+          "default": "Game",
+          "description": "Virtual desktop name."
+        }
+      }
+    },
+
+    "notes": {
+      "type": "string",
+      "description": "Usage notes, known issues, and workarounds for users."
+    },
+
+    "knownIssues": {
+      "type": "array",
+      "description": "List of known issues with this game/profile.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "issue": {
+            "type": "string",
+            "description": "Description of the issue."
+          },
+          "workaround": {
+            "type": "string",
+            "description": "How to work around this issue."
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["minor", "moderate", "major", "blocker"],
+            "description": "How severe the issue is."
+          }
+        }
+      }
+    },
+
+    "testedWith": {
+      "type": "array",
+      "description": "Tested bundle version combinations and their results.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "wineVersion": {
+            "type": "string",
+            "description": "Wine version tested."
+          },
+          "wineProfile": {
+            "type": "string",
+            "description": "Wine build profile used (full/gaming)."
+          },
+          "dxvkVersion": {
+            "type": "string",
+            "description": "DXVK version tested."
+          },
+          "turnipVersion": {
+            "type": "string",
+            "description": "Turnip/Mesa version tested."
+          },
+          "box64Version": {
+            "type": "string",
+            "description": "Box64 version tested."
+          },
+          "device": {
+            "type": "string",
+            "description": "Test device model.",
+            "examples": ["Snapdragon 8 Gen 2", "Adreno 740"]
+          },
+          "androidVersion": {
+            "type": "string",
+            "description": "Android version tested."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["platinum", "gold", "silver", "bronze", "broken"],
+            "description": "Compatibility rating (ProtonDB-style)."
+          },
+          "fps": {
+            "type": "string",
+            "description": "Typical FPS range observed.",
+            "examples": ["30-60", "60+", "15-30"]
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes about this test."
+          },
+          "testedDate": {
+            "type": "string",
+            "format": "date",
+            "description": "When this combination was tested."
+          }
+        }
+      }
+    },
+
+    "tags": {
+      "type": "array",
+      "description": "Searchable tags for this profile.",
+      "items": { "type": "string" },
+      "examples": [["mmorpg", "dx9", "2006", "arenanet", "online"]]
+    },
+
+    "relatedProfiles": {
+      "type": "array",
+      "description": "IDs of related game profiles.",
+      "items": { "type": "string" },
+      "examples": [["guild-wars-2", "generic-dx9"]]
+    }
+  },
+
+  "definitions": {
+    "statusRating": {
+      "type": "string",
+      "enum": ["platinum", "gold", "silver", "bronze", "broken"],
+      "description": "platinum=perfect, gold=minor issues, silver=playable with tweaks, bronze=runs but issues, broken=does not work"
+    }
+  }
+}

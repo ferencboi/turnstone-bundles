@@ -6,6 +6,12 @@
 
 ---
 
+## Non negotiable rule:
+Do not use symbols, icons, emojis, or any non-standard Unicode symbols in code, comments, documentation, or chat responses. All content must use only standard alphanumeric characters, punctuation, and symbols appropriate to the programming language. This applies to source code, inline and block comments, markdown, API docs, and all generated communication.
+Retroactively remove any such symbols from existing code or documentation when making changes.
+
+---
+
 ## 🎮 Project Focus: Gaming on Android ARM64
 
 **Turnstone is a Winlator-style app** for running Windows games on Android ARM64 devices with Qualcomm Adreno GPUs. This is NOT a general-purpose Windows compatibility project.

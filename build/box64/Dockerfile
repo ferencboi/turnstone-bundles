@@ -1,7 +1,13 @@
 # Docker image for building box64 for Android
 #
 # Build: docker build -t turnstone-box64-builder -f Dockerfile .
-# Run: docker run --rm -v $(pwd)/output:/output -v $(pwd)/scripts:/build/scripts:ro turnstone-box64-builder [version]
+#
+# Usage (do NOT use --rm, clean up manually after success):
+#   docker run --name box64-build -v $(pwd)/output:/output turnstone-box64-builder [version]
+#   docker rm box64-build  # Only after successful build!
+#
+# On failure, container is preserved - extract artifacts with:
+#   docker cp box64-build:/build/ ./recovered-build/
 
 FROM turnstone-build-base
 

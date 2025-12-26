@@ -1,0 +1,186 @@
+{
+  "id": "guild-wars",
+  "name": "Guild Wars (All Campaigns)",
+  "version": "1.0.0",
+  "author": "Turnstone Team",
+
+  "gameInfo": {
+    "title": "Guild Wars",
+    "developer": "ArenaNet",
+    "publisher": "NCSoft",
+    "releaseYear": 2005,
+    "directXVersion": "9.0c",
+    "architecture": "32-bit",
+    "executable": "Gw.exe",
+    "protonDbUrl": "https://www.protondb.com/app/29570"
+  },
+
+  "minimumWineVersion": "9.0",
+
+  "requiredCapabilities": [
+    "wow64",
+    "gnutls",
+    "pulse-audio"
+  ],
+
+  "basePreset": "performance",
+
+  "environment": {
+    "WINEDEBUG": "-all",
+    "WINEESYNC": "1",
+    "WINEFSYNC": "1",
+    "WINE_LARGE_ADDRESS_AWARE": "1",
+
+    "DXVK_ASYNC": "1",
+    "DXVK_STATE_CACHE": "1",
+    "DXVK_LOG_LEVEL": "none",
+
+    "TU_DEBUG": "noconform",
+    "mesa_glthread": "true",
+
+    "BOX64_DYNAREC": "1",
+    "BOX64_DYNAREC_BIGBLOCK": "1",
+    "BOX64_DYNAREC_STRONGMEM": "0",
+    "BOX64_DYNAREC_FASTNAN": "1",
+    "BOX64_DYNAREC_FASTROUND": "1"
+  },
+
+  "dllOverrides": {
+    "d3d9": "native,builtin",
+    "winemenubuilder.exe": "disabled"
+  },
+
+  "registry": [
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "d3d9",
+      "data": "native",
+      "type": "REG_SZ",
+      "comment": "Use DXVK for DirectX 9"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      "value": "MaxShaderModelVS",
+      "data": "3.0",
+      "type": "REG_SZ",
+      "comment": "Limit vertex shaders for Turnip stability"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      "value": "MaxShaderModelPS",
+      "data": "3.0",
+      "type": "REG_SZ",
+      "comment": "Limit pixel shaders for Turnip stability"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      "value": "csmt",
+      "data": 3,
+      "type": "REG_DWORD",
+      "comment": "Enable command stream multi-threading"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "UseTakeFocus",
+      "data": "N",
+      "type": "REG_SZ",
+      "comment": "Prevent focus issues on Android"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "GrabPointer",
+      "data": "Y",
+      "type": "REG_SZ",
+      "comment": "Capture mouse for camera control"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      "value": "GrabFullscreen",
+      "data": "Y",
+      "type": "REG_SZ",
+      "comment": "Grab input in fullscreen"
+    },
+    {
+      "path": "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\Spooler",
+      "value": "Start",
+      "data": 4,
+      "type": "REG_DWORD",
+      "comment": "Disable print spooler"
+    },
+    {
+      "path": "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\wuauserv",
+      "value": "Start",
+      "data": 4,
+      "type": "REG_DWORD",
+      "comment": "Disable Windows Update service"
+    },
+    {
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "value": "winemenubuilder.exe",
+      "data": "disabled",
+      "type": "REG_SZ",
+      "comment": "Disable desktop integration"
+    }
+  ],
+
+  "gameArguments": [
+    "-bmp"
+  ],
+
+  "wineArguments": [],
+
+  "virtualDesktop": {
+    "enabled": false,
+    "width": 1280,
+    "height": 720,
+    "name": "GuildWars"
+  },
+
+  "notes": "Guild Wars 1 includes Prophecies, Factions, Nightfall, and Eye of the North campaigns. All run with the same executable (Gw.exe).\n\nIMPORTANT: Requires working TLS/SSL for login authentication. The Wine bundle MUST be built with gnutls support.\n\nThe -bmp argument makes screenshots save as BMP files which works more reliably.\n\nLauncher news panel may not display correctly without mshtml, but this does not affect gameplay.",
+
+  "knownIssues": [
+    {
+      "issue": "Launcher news panel may be blank or show errors",
+      "workaround": "This is cosmetic only - click Play to start the game normally",
+      "severity": "minor"
+    },
+    {
+      "issue": "Login fails with SSL/TLS error",
+      "workaround": "Ensure Wine bundle was built with --with-gnutls and schannel.dll is present",
+      "severity": "blocker"
+    },
+    {
+      "issue": "Mouse not captured in windowed mode",
+      "workaround": "GrabPointer registry key should be Y, or use fullscreen",
+      "severity": "minor"
+    }
+  ],
+
+  "testedWith": [
+    {
+      "wineVersion": "9.22",
+      "wineProfile": "gaming",
+      "dxvkVersion": "2.5.3",
+      "turnipVersion": "25.3.2",
+      "box64Version": "0.3.8",
+      "status": "gold",
+      "notes": "Tested configuration from Turnstone bundle releases",
+      "testedDate": "2025-12-26"
+    }
+  ],
+
+  "tags": [
+    "mmorpg",
+    "dx9",
+    "2005",
+    "arenanet",
+    "ncsoft",
+    "online",
+    "fantasy",
+    "guild-wars-1"
+  ],
+
+  "relatedProfiles": [
+    "generic-dx9"
+  ]
+}
