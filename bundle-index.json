@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2025-12-25T12:00:00Z",
+  "updatedAt": "2025-12-27T00:00:00Z",
   "bundles": [
     {
       "id": "box64-0.3.8-arm64",
@@ -66,6 +66,24 @@
       "requiredVulkanExtensions": [],
       "minAndroidSdk": 29,
       "releaseNotes": "Wine 9.22 - Full build (Linux x86_64 for Box64). WoW64 mode supports 32-bit and 64-bit Windows apps. Experimental release for development/testing."
+    },
+    {
+      "id": "wine-9.22-gaming-x86_64",
+      "type": "wine",
+      "version": "9.22",
+      "profile": "gaming",
+      "abi": "x86_64",
+      "sha256": "f6f405eeaae82d2bd4adcd8d4e34aed831acbf54966e31d2bbbbfcb54a9a3ebd",
+      "downloadUrl": "https://github.com/ferencboi/turnstone-bundles/releases/download/wine-9.22-gaming/wine-9.22-gaming-x86_64.tar.zst",
+      "sizeBytes": 65124659,
+      "installedSizeBytes": 515000000,
+      "compatibilityTags": [
+        "wow64",
+        "gaming-build"
+      ],
+      "requiredVulkanExtensions": [],
+      "minAndroidSdk": 29,
+      "releaseNotes": "Wine 9.22 Gaming - Stripped build for gaming (Linux x86_64 for Box64). WoW64 mode, ~200MB installed. Excludes cups, sane, ldap, gphoto for smaller size."
     }
   ]
 }
